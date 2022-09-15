@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}" />
+    <script
+      src="https://kit.fontawesome.com/c7201af723.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Dictionary</title>
+  </head>
+  <body>
+    <div class="main">
+      <div class="search-box">
+        <form autocomplete="off" action="" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn-search">
+            <i class="fas fa-search"></i>
+          </button>
+          <input
+            autocomplete="off"
+            type="text"
+            name="word"
+            class="input-search"
+            placeholder="Type to Search..."
+          />
+        </form>
+        <br />
+      </div>
+      <br />
+      <div class="info">
+        {% if request.method == 'GET' %}
+
+        <div class="defi">
+          <h2>Search for a word by clicking the icon above</h2>
+        </div>
+
+        {% else %}
+
+        <h1 style="text-align: center">{{ word }}</h1>
+        <hr /><br>
+
+        {% for meaning in meanings %}
+
+        <div class="defi">
+          {% with definitions=meaning.definitions|first%}
+          <h2>{{ meaning.partOfSpeech.upper }}</h2>
+          <hr>
+          <h3>{{ definitions.definition }}</h3>
+          {% endwith %} 
+          {% with definitions=meaning.definitions|first%}
+
+          {% if definitions.example %}
+
+          <h4>E.g.  {{ definitions.example }}</h4>  
+
+          {% endif %}
+          
+          {% endwith %}
+          
+
+        </div>
+        {% empty %}
+
+        <div class="defi">
+          <h2>We could not found the following word "{{ word }}" please try again with a deffirent word</h2>
+        </div>
+          
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
